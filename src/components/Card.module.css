@@ -5,8 +5,8 @@
     justify-content: center;
     align-items: flex-start;
     gap: 10px;
-    align-self: stretch;
-
+    width: 100%;
+    max-width: 500px;
     border-radius: 0px 20px;
     background: #222;
 }
@@ -27,12 +27,16 @@
 
 .title {
     color: #FFF;
-    font-family: Oxanium;
     font-size: 15.104px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     margin: 0;
+}
+
+.svg {
+    padding: 5px;
+    cursor: pointer;
 }
 
 .content {
@@ -54,7 +58,6 @@
 
 .row p {
     color: #FFF;
-    font-family: Nunito;
     font-size: 15.104px;
     font-style: normal;
     font-weight: 400;

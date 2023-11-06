@@ -1,17 +1,31 @@
-:root{
+:root {
   --red: rgb(229, 46, 46);
   --yellow: rgb(229, 174, 46);
   --green: rgb(64, 229, 46);
 }
 
+@font-face {
+  font-family: Oxanium;
+  src: url(/fonts/Oxanium.ttf);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Nunito;
+  src: url(/fonts/Nunito.ttf);
+  font-display: swap;
+}
+
 body, html {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-
+  font-family: Nunito, sans-serif;
   background: #101010;
   color: white;
+}
+
+h1, h2, h3 {
+  font-family: Oxanium, sans-serif;
 }
 
 #__next {
@@ -30,4 +44,42 @@ a {
 
 * {
   box-sizing: border-box;
+
+  overscroll-behavior-x: none;
+}
+
+*:active {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: black;
+  background: white;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(95, 95, 95);
+  border-radius: 2px;
+}
+
+::placeholder {
+  color: rgb(150, 150, 150);
+  opacity: 1;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }

@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    padding: 10px 38px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 0px 10px;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+.primary {
+    background: #2397F3;
+}
+
+.secondary {
+    border: 1px solid #FFF;
+}
