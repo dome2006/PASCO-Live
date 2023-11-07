@@ -31,7 +31,6 @@ h1, h2, h3 {
 #__next {
   display: flex;
   width: 100%;
-  padding: 10px;
   flex-direction: column;
   align-items: flex-start;
   gap: 43px;

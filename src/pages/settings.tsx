@@ -9,34 +9,39 @@ import { useState } from 'react'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
 import classNames from 'classnames'
+import { useKey } from 'react-use'
 
 export default function Home() {
 	// const hello = api.post.hello.useQuery({ text: 'from tRPC' })
 
 	const router = useRouter()
 
+	useKey('Escape', () => {
+		router.back()
+	})
+
 	const [changesMade, setChangesMade] = useState(false)
 
-    const [doShake, setDoShake] = useState(false)
+	const [doShake, setDoShake] = useState(false)
 
 	const changesMadeStyle = changesMade
 		? {
 				opacity: 1,
 				y: 0,
-				transition: { ease: [0,.58,.58,1.25] },
+				transition: { ease: [0, 0.58, 0.58, 1.25] },
 		  }
 		: {
 				opacity: 0,
 				y: 30,
-				transition: { ease: [.49,-0.28,.96,.66] },
+				transition: { ease: [0.49, -0.28, 0.96, 0.66] },
 		  }
 
-	useOnLeavePageConfirmation(changesMade, ()=>{
-        setDoShake(true)
-        setTimeout(() => {
-            setDoShake(false)
-        }, 500);
-    })
+	useOnLeavePageConfirmation(changesMade, () => {
+		setDoShake(true)
+		setTimeout(() => {
+			setDoShake(false)
+		}, 500)
+	})
 
 	const [name, setName] = useState('Zimmertemperatur')
 
@@ -45,9 +50,9 @@ export default function Home() {
 			<motion.div
 				className={styles.overlay}
 				transition={{ duration: 0.1 }}
-				initial={{ scale: 1.3, opacity: 0 }}
-				animate={{ scale: 1, opacity: 1 }}
-				exit={{ scale: 1.3, opacity: 0 }}
+				initial={{ scale: 1.1, opacity: 0 }}
+				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: 0.2, delay: 0.1 } }}
+				exit={{ scale: 1.1, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: 0.2 } }}
 			>
 				<div className={styles.card}>
 					<div className={styles.header}>
@@ -74,6 +79,7 @@ export default function Home() {
 							</svg>
 						</Button>
 					</div>
+					<div className={styles.seperator}></div>
 					<div className={styles.content}>
 						<Input
 							width={'100%'}
@@ -95,7 +101,7 @@ export default function Home() {
 							Sensortyp
 						</Input>
 
-						<motion.div className={classNames(styles.unsafedChanges, !changesMade && styles.hideUnsafedChanges, doShake&&styles.doShake)} animate={changesMadeStyle}>
+						<motion.div className={classNames(styles.unsafedChanges, !changesMade && styles.hideUnsafedChanges, doShake && styles.doShake)} animate={changesMadeStyle}>
 							<p>Ungespeicherte Änderungen</p>
 							<div className={styles.buttonRow}>
 								<Button
@@ -110,7 +116,6 @@ export default function Home() {
 									type={'primary'}
 									onClick={() => {
 										setChangesMade(false)
-										router.back()
 									}}
 								>
 									Speichern

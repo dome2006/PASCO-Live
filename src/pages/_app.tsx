@@ -7,6 +7,7 @@ import { api } from '~/utils/api'
 import '~/styles/globals.css'
 import Head from 'next/head'
 import { AnimatePresence } from 'framer-motion'
+import { createContext } from 'react'
 
 const MyApp: AppType = ({ Component, pageProps, router }) => {
 	return (
@@ -20,7 +21,7 @@ const MyApp: AppType = ({ Component, pageProps, router }) => {
 				<meta name="theme-color" content="#FFFFFF" />
 			</Head>
 			<AnimatePresence mode={'sync'} initial={false}>
-				<Component {...pageProps} key={router.asPath} />
+				<Component {...pageProps} key={router.pathname} />
 			</AnimatePresence>
 		</>
 	)
