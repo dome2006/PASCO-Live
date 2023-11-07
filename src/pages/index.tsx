@@ -32,7 +32,7 @@ export default function Home() {
 							{ label: 'Batterie', value: '52%' },
 						]}
 						onEdit={async () => {
-							await router.push('/settings')
+							await router.push({pathname: '/settings'})
 						}}
 					></Card>
 				</main>

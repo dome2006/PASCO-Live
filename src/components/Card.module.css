@@ -34,11 +34,6 @@
     margin: 0;
 }
 
-.svg {
-    padding: 5px;
-    cursor: pointer;
-}
-
 .content {
     display: flex;
     padding-top: 20px;

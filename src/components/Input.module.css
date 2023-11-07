@@ -1,0 +1,63 @@
+.group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.title {
+    color: #FFF;
+    font-family: Nunito;
+    font-size: 15.104px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
+}
+
+.input {
+    display: flex;
+    padding: 0px 1px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: 0px 5px;
+    background: #383838;
+    border: none;
+
+    max-width: 100%;
+
+    padding: 3px;
+
+    text-align: center;
+
+    color: #FFF;
+    font-family: Nunito;
+    font-size: 15.104px;
+
+    outline-offset: 0px;
+
+    transition: outline-offset 0.05s;
+}
+
+.input:focus-visible {
+    outline-offset: 3px;
+    outline: #2397f3 3px solid;
+}
+
+.inputRow {
+    display: flex;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+
+    gap: 10px;
+}
+
+.inputRow p {
+    margin: 0;
+}

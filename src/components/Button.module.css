@@ -2,13 +2,28 @@
     display: flex;
     padding: 10px 38px;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
     border-radius: 0px 10px;
 
     cursor: pointer;
     user-select: none;
+
+    background-color: transparent;
+    color: #FFF;
+    font-family: Nunito;
+    font-size: 15.104px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    border: none;
+
+    outline-offset: 0px;
+
+    transition: outline-offset 0.05s;
 }
+
 
 .primary {
     background: #2397F3;
@@ -16,4 +31,15 @@
 
 .secondary {
     border: 1px solid #FFF;
+}
+
+.none{
+    padding: 5px;
+    border-radius: 15px;
+}
+
+.container:focus-visible {
+    outline-offset: 3px;
+
+    outline: #2397f3 3px solid;
 }
