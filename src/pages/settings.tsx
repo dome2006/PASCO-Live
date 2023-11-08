@@ -5,7 +5,7 @@ import Card from '~/components/Card'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useOnLeavePageConfirmation } from '~/utils/useOnLeavePageConfirmation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '~/components/Button'
 import Input from '~/components/Input'
 import classNames from 'classnames'
@@ -20,9 +20,49 @@ export default function Home() {
 		router.back()
 	})
 
-	const [changesMade, setChangesMade] = useState(false)
+	const [isAdd, setIsAdd] = useState(!!router.query.isAdd)
+	const [originSensorID, setOriginSensorID] = useState(router.query.id as string)
 
-	const [doShake, setDoShake] = useState(false)
+	useEffect(() => {
+		if (router.query.isAdd) {
+			setIsAdd(true)
+		}
+	}, [router.query.isAdd])
+
+	useEffect(() => {
+		if (router.query.id) {
+			setOriginSensorID(router.query.id as string)
+		}
+	}, [router.query.id])
+
+	const initialName = originSensorID ? 'Zimmertemperatur' : ''
+	const [name, setName] = useState<string | undefined>(undefined)
+
+	const initialSensorID = originSensorID ? '202-838' : ''
+	const [sensorID, setSensorID] = useState<string | undefined>(undefined)
+
+	const initialMeasurementDuration = originSensorID ? '5' : ''
+	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
+
+	const initialType = originSensorID ? 'Temperatur' : ''
+	const [type, setType] = useState<string | undefined>(undefined)
+
+	const [overrideChangesMade, setOverrideChangesMade] = useState(false)
+
+	function reset() {
+		setName(undefined)
+		setSensorID(undefined)
+		setMeasurementDuration(undefined)
+		setType(undefined)
+	}
+
+	const changesMade = !!(
+		((initialName !== name && name) ??
+			(initialSensorID !== sensorID && sensorID) ??
+			(initialMeasurementDuration !== measurementDuration && measurementDuration) ??
+			(initialType !== type && type)) &&
+		!overrideChangesMade
+	)
 
 	const changesMadeStyle = changesMade
 		? {
@@ -36,6 +76,8 @@ export default function Home() {
 				transition: { ease: [0.49, -0.28, 0.96, 0.66] },
 		  }
 
+	const [doShake, setDoShake] = useState(false)
+
 	useOnLeavePageConfirmation(changesMade, () => {
 		setDoShake(true)
 		setTimeout(() => {
@@ -43,28 +85,28 @@ export default function Home() {
 		}, 500)
 	})
 
-	const [name, setName] = useState('Zimmertemperatur')
-
 	return (
 		<>
 			<motion.div
 				className={styles.overlay}
 				transition={{ duration: 0.1 }}
 				initial={{ scale: 1.1, opacity: 0 }}
-				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: .2, delay: 0.1 } }}
-				exit={{ scale: 1.1, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: .2 } }}
+				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: 0.2, delay: 0.1 } }}
+				exit={{ scale: 1.1, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: 0.2 } }}
 			>
 				<div className={styles.card}>
 					<div className={styles.header}>
-						<Button type={'none'}>
-							<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 14 17" fill="none">
-								<path
-									d="M6.39056 0.890549C5.34426 0.890549 4.48819 1.74661 4.48819 2.79291H2.58583C1.53953 2.79291 0.683472 3.64897 0.683472 4.69527H14C14 3.64897 13.1439 2.79291 12.0976 2.79291H10.1953C10.1953 1.74661 9.33922 0.890549 8.29292 0.890549H6.39056ZM2.58583 6.59763V15.748C2.58583 15.9572 2.73802 16.1094 2.94728 16.1094H11.7552C11.9645 16.1094 12.1167 15.9572 12.1167 15.748V6.59763H10.2143V13.2559C10.2143 13.7886 9.79578 14.2071 9.26312 14.2071C8.73046 14.2071 8.31194 13.7886 8.31194 13.2559V6.59763H6.40958V13.2559C6.40958 13.7886 5.99106 14.2071 5.4584 14.2071C4.92574 14.2071 4.50722 13.7886 4.50722 13.2559V6.59763H2.60486H2.58583Z"
-									fill="#F32323"
-								/>
-							</svg>
-						</Button>
-						<h2>Sensor bearbeiten</h2>
+						{!isAdd && (
+							<Button type={'none'}>
+								<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 14 17" fill="none">
+									<path
+										d="M6.39056 0.890549C5.34426 0.890549 4.48819 1.74661 4.48819 2.79291H2.58583C1.53953 2.79291 0.683472 3.64897 0.683472 4.69527H14C14 3.64897 13.1439 2.79291 12.0976 2.79291H10.1953C10.1953 1.74661 9.33922 0.890549 8.29292 0.890549H6.39056ZM2.58583 6.59763V15.748C2.58583 15.9572 2.73802 16.1094 2.94728 16.1094H11.7552C11.9645 16.1094 12.1167 15.9572 12.1167 15.748V6.59763H10.2143V13.2559C10.2143 13.7886 9.79578 14.2071 9.26312 14.2071C8.73046 14.2071 8.31194 13.7886 8.31194 13.2559V6.59763H6.40958V13.2559C6.40958 13.7886 5.99106 14.2071 5.4584 14.2071C4.92574 14.2071 4.50722 13.7886 4.50722 13.2559V6.59763H2.60486H2.58583Z"
+										fill="#F32323"
+									/>
+								</svg>
+							</Button>
+						)}
+						<h2>{isAdd ? 'Sensor hinzufügen' : 'Sensor bearbeiten'}</h2>
 						<Button
 							type={'none'}
 							onClick={() => {
@@ -83,21 +125,39 @@ export default function Home() {
 					<div className={styles.content}>
 						<Input
 							width={'100%'}
-							value={name}
+							value={name ?? initialName}
 							onChange={(e) => {
 								setName(e.target.value)
-								setChangesMade(true)
 							}}
 						>
 							Name
 						</Input>
-						<Input width={'100px'} value={'202-838'}>
+						<Input
+							width={'100px'}
+							value={sensorID ?? initialSensorID}
+							onChange={(e) => {
+								setSensorID(e.target.value)
+							}}
+						>
 							Sensor ID
 						</Input>
-						<Input width={'60px'} value={'5'} unit={'Minuten'}>
+						<Input
+							width={'60px'}
+							value={measurementDuration ?? initialMeasurementDuration}
+							onChange={(e) => {
+								setMeasurementDuration(e.target.value)
+							}}
+							unit={'Minuten'}
+						>
 							Messung alle
 						</Input>
-						<Input width={'200px'} value={'Temperatur'}>
+						<Input
+							width={'200px'}
+							value={type ?? initialType}
+							onChange={(e) => {
+								setType(e.target.value)
+							}}
+						>
 							Sensortyp
 						</Input>
 
@@ -107,18 +167,26 @@ export default function Home() {
 								<Button
 									type={'secondary'}
 									onClick={() => {
-										setChangesMade(false)
+										reset()
+										isAdd && router.back()
 									}}
 								>
-									Zurücksetzen
+									{isAdd ? 'Abbrechen' : 'Zurücksetzen'}
 								</Button>
 								<Button
 									type={'primary'}
 									onClick={() => {
-										setChangesMade(false)
+										if (isAdd) {
+                                            //TODO: Add
+											setOverrideChangesMade(true)
+											router.back()
+										} else {
+                                            //TODO: Edit
+											reset()
+										}
 									}}
 								>
-									Speichern
+									{isAdd ? 'Hinzufügen' : 'Speichern'}
 								</Button>
 							</div>
 						</motion.div>

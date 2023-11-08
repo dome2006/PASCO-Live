@@ -8,27 +8,50 @@ import Button from '~/components/Button'
 import { useRouter } from 'next/router'
 import { motion } from 'framer-motion'
 import { useScroll } from 'react-use'
-import { useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef } from 'react'
+import { mainPageScrollContext } from './_app'
 
 export default function Home() {
 	// const hello = api.post.hello.useQuery({ text: 'from tRPC' })
 
 	const router = useRouter()
 
+	const { scroll, setScoll } = useContext(mainPageScrollContext)
+
 	const scrollRef = useRef<HTMLDivElement>(null)
 	const { y } = useScroll(scrollRef)
 
-  useEffect(() => {
-    scrollRef.current?.scrollTo(0, router.query.y ? parseInt(router.query.y as string) : 0)
-    //gewollt nur einmal ausgeführt
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollRef])
+	useEffect(() => {
+		scrollRef.current?.scrollTo(0, scroll)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [scrollRef])
 
 	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		router.replace({ pathname: '/', query: { y } }, undefined, { shallow: true })
+		setScoll(y)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [y])
 
+	const cards = [
+		{
+			id: '4e36bwbe465b65e',
+			name: 'Zimmerteperatur',
+			sensorID: '202-838',
+			status: 'green',
+			type: 'Temperatur',
+			measurementDuration: 5,
+			lastMeasurement: 3,
+			measurements: [
+				{
+					name: 'Temperatur',
+					value: '20°C',
+				},
+				{
+					name: 'Batterie',
+					value: '52%',
+				},
+			],
+		},
+	]
 
 	return (
 		<>
@@ -36,147 +59,34 @@ export default function Home() {
 				ref={scrollRef}
 				className={styles.page}
 				initial={{ scale: 0.9, opacity: 0 }}
-				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: .2, delay: 0.1 } }}
-				exit={{ scale: 0.9, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: .2 } }}
+				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: 0.2, delay: 0.1 } }}
+				exit={{ scale: 0.9, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: 0.2 } }}
 			>
 				<Header indicatorState={'green'}></Header>
 				<main className={styles.main}>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
-					<Card
-						title={'Zimmertemperatur'}
-						indicatorState={'green'}
-						rows={[
-							{ label: 'ID', value: '202-838' },
-							{ label: 'Typ', value: 'Temperatur' },
-							{ idSeperator: true },
-							{ label: 'Messung alle', value: '5 Minuten' },
-							{ label: 'Letzte Messung', value: 'vor 3 Minuten' },
-							{ idSeperator: true },
-							{ label: 'Temperatur', value: '20°C' },
-							{ label: 'Batterie', value: '52%' },
-						]}
-						onEdit={async () => {
-							await router.push({ pathname: '/settings' })
-						}}
-					></Card>
+					{cards.map((card, index) => {
+						return (
+							<Card
+								key={index}
+								title={card.name}
+								indicatorState={card.status}
+								rows={[
+									{ label: 'ID', value: card.sensorID },
+									{ label: 'Typ', value: card.type },
+									{ idSeperator: true },
+									{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },
+									{ label: 'Letzte Messung', value: `vor ${card.lastMeasurement} Minuten` },
+									{ idSeperator: true },
+									...card.measurements.map((measurement) => {
+										return { label: measurement.name, value: measurement.value }
+									}),
+								]}
+								onEdit={async () => {
+									await router.push({ pathname: '/settings', query: { id: card.id } })
+								}}
+							></Card>
+						)
+					})}
 				</main>
 			</motion.div>
 			<div className={styles.fob}>
@@ -193,4 +103,3 @@ export default function Home() {
 		</>
 	)
 }
-

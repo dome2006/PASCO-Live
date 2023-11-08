@@ -3,7 +3,7 @@
  * Asks for confirmation to leave/reload if there are unsaved changes.
  */
 import Router, { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export const useOnLeavePageConfirmation = (unsavedChanges: boolean, callback: () => void) => {
 	const router = useRouter()
@@ -20,7 +20,7 @@ export const useOnLeavePageConfirmation = (unsavedChanges: boolean, callback: ()
 		if (unsavedChanges) {
 			const beforeHistoryChange = async () => {
 				router.events.off('beforeHistoryChange', beforeHistoryChange)
-				await router.push(router.pathname, undefined, { shallow: true })
+				await router.push(router.asPath, undefined, { shallow: true })
 				router.events.on('beforeHistoryChange', beforeHistoryChange)
                 callback()
 			}
