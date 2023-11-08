@@ -36,8 +36,8 @@ export default function Home() {
 				ref={scrollRef}
 				className={styles.page}
 				initial={{ scale: 0.9, opacity: 0 }}
-				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: 0.2, delay: 0.1 } }}
-				exit={{ scale: 0.9, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: 0.2 } }}
+				animate={{ scale: 1, opacity: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: .2, delay: 0.1 } }}
+				exit={{ scale: 0.9, opacity: 0, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: .2 } }}
 			>
 				<Header indicatorState={'green'}></Header>
 				<main className={styles.main}>

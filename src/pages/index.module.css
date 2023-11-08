@@ -10,11 +10,13 @@
 
 .main {
   display: flex;
-  width: 100%;
+  text-align: center;
   padding: 0px 18px;
+  /* width: 100%; */
   padding-bottom: 20px;
   flex-wrap: wrap;
   align-items: flex-start;
+  /* justify-content: center; */
   gap: 25px;
 }
 
