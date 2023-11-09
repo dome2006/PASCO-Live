@@ -1,4 +1,4 @@
-// import { api } from '~/utils/api'
+import { api } from '~/utils/api'
 import styles from './index.module.css'
 import Card from '~/components/Card'
 import Header from '~/components/Header'
@@ -10,7 +10,9 @@ import { useContext, useEffect, useRef } from 'react'
 import { mainPageScrollContext } from './_app'
 
 export default function Home() {
-	// const hello = api.post.hello.useQuery({ text: 'from tRPC' })
+	const { data } = api.sensor.getAll.useQuery()
+
+	const cards = data?.cards ?? []
 
 	const router = useRouter()
 
@@ -29,28 +31,6 @@ export default function Home() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [y])
 
-	const cards = [
-		{
-			id: '4e36bwbe465b65e',
-			name: 'Zimmerteperatur',
-			sensorID: '202-838',
-			status: 'green',
-			type: 'Temperatur',
-			measurementDuration: 5,
-			lastMeasurement: 3,
-			measurements: [
-				{
-					name: 'Temperatur',
-					value: '20°C',
-				},
-				{
-					name: 'Batterie',
-					value: '52%',
-				},
-			],
-		},
-	]
-
 	return (
 		<>
 			<motion.div
@@ -67,7 +47,7 @@ export default function Home() {
 							<Card
 								key={index}
 								title={card.name}
-								indicatorState={"green" || card.status}
+								indicatorState={'green' || card.status}
 								rows={[
 									{ label: 'ID', value: card.sensorID },
 									{ label: 'Typ', value: card.type },
@@ -87,11 +67,7 @@ export default function Home() {
 					})}
 				</main>
 			</motion.div>
-			<motion.div className={styles.fob}
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
-      exit={{opacity: 0}}
-      >
+			<motion.div className={styles.fob} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 				<Button
 					onClick={async () => {
 						await router.push({ pathname: '/settings', query: { isAdd: true } })

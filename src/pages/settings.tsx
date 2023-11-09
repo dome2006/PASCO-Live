@@ -1,7 +1,5 @@
-// import { api } from '~/utils/api'
+import { api } from '~/utils/api'
 import styles from './settings.module.css'
-import Header from '~/components/Header'
-import Card from '~/components/Card'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useOnLeavePageConfirmation } from '~/utils/useOnLeavePageConfirmation'
@@ -12,7 +10,10 @@ import classNames from 'classnames'
 import { useKey } from 'react-use'
 
 export default function Home() {
-	// const hello = api.post.hello.useQuery({ text: 'from tRPC' })
+	const { data, refetch } = api.sensor.getAll.useQuery()
+
+	const createSensor = api.sensor.create.useMutation()
+	const updateSensor = api.sensor.update.useMutation()
 
 	const router = useRouter()
 
@@ -22,6 +23,8 @@ export default function Home() {
 
 	const [isAdd, setIsAdd] = useState(!!router.query.isAdd)
 	const [originSensorID, setOriginSensorID] = useState(router.query.id as string)
+
+	const originSensor = data?.cards.find((e) => e.id == originSensorID)
 
 	useEffect(() => {
 		if (router.query.isAdd) {
@@ -35,19 +38,28 @@ export default function Home() {
 		}
 	}, [router.query.id])
 
-	const initialName = originSensorID ? 'Zimmertemperatur' : ''
+	const initialName = originSensor ? originSensor.name : ''
 	const [name, setName] = useState<string | undefined>(undefined)
 
-	const initialSensorID = originSensorID ? '202-838' : ''
+	const initialSensorID = originSensor ? originSensor.sensorID : ''
 	const [sensorID, setSensorID] = useState<string | undefined>(undefined)
 
-	const initialMeasurementDuration = originSensorID ? '5' : ''
+	const initialMeasurementDuration = originSensor ? originSensor.measurementDuration.toString() : ''
 	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
 
-	const initialType = originSensorID ? 'Temperatur' : ''
+	const initialType = originSensor ? originSensor.type : ''
 	const [type, setType] = useState<string | undefined>(undefined)
 
 	const [overrideChangesMade, setOverrideChangesMade] = useState(false)
+	const [saving, setSaving] = useState(false)
+
+	useEffect(() => {
+		if ((originSensorID && !originSensor) || (!isAdd && !originSensorID)) {
+			setOverrideChangesMade(true)
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			router.replace('/')
+		}
+	}, [isAdd, originSensor, originSensorID, router])
 
 	function reset() {
 		setName(undefined)
@@ -175,14 +187,35 @@ export default function Home() {
 								</Button>
 								<Button
 									type={'primary'}
-									onClick={() => {
+									loading={saving}
+									onClick={async () => {
 										if (isAdd) {
-                                            //TODO: Add
-											setOverrideChangesMade(true)
-											router.back()
+											setSaving(true)
+											try {
+												await createSensor.mutateAsync({ name: name ?? '', sensorID: sensorID ?? '', measurementDuration: parseInt(measurementDuration ?? '0'), type: type ?? '' })
+												await refetch()
+												setOverrideChangesMade(true)
+												router.back()
+											} catch (error) {
+												setSaving(false)
+											}
 										} else {
-                                            //TODO: Edit
-											reset()
+											console.log('update')
+											setSaving(true)
+											try {
+												await updateSensor.mutateAsync({
+													id: originSensorID,
+													name: name,
+													sensorID: sensorID,
+													measurementDuration: measurementDuration ? parseInt(measurementDuration) : undefined,
+													type: type,
+												})
+												await refetch()
+												setSaving(false)
+												reset()
+											} catch (error) {
+												setSaving(false)
+											}
 										}
 									}}
 								>
