@@ -15,7 +15,7 @@ export default function Card({
 	return (
 		<div className={styles.card}>
 			<div className={styles.header}>
-				<div className={styles.indicator} style={{ backgroundColor: `var(--${indicatorState})` }}></div>
+				<div className={styles.indicator} title={indicatorState == "green" ? "Verbunden" : indicatorState == "yellow" ? "Verbindung wird hergestellt" : "Nicht verbunden"} style={{ backgroundColor: `var(--${indicatorState})` }}></div>
 				<h2 className={styles.title}>{title}</h2>
 				<Button type={'none'} onClick={onEdit}>
 					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">

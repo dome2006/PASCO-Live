@@ -1,5 +1,3 @@
-import Head from 'next/head'
-
 // import { api } from '~/utils/api'
 import styles from './index.module.css'
 import Card from '~/components/Card'
@@ -69,7 +67,7 @@ export default function Home() {
 							<Card
 								key={index}
 								title={card.name}
-								indicatorState={card.status}
+								indicatorState={"green" || card.status}
 								rows={[
 									{ label: 'ID', value: card.sensorID },
 									{ label: 'Typ', value: card.type },
@@ -89,7 +87,11 @@ export default function Home() {
 					})}
 				</main>
 			</motion.div>
-			<div className={styles.fob}>
+			<motion.div className={styles.fob}
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      exit={{opacity: 0}}
+      >
 				<Button
 					onClick={async () => {
 						await router.push({ pathname: '/settings', query: { isAdd: true } })
@@ -99,7 +101,7 @@ export default function Home() {
 						<path d="M5.25 0.5V5.75H0V9.25H5.25V14.5H8.75V9.25H14V5.75H8.75V0.5H5.25Z" fill="white" />
 					</svg>
 				</Button>
-			</div>
+			</motion.div>
 		</>
 	)
 }
