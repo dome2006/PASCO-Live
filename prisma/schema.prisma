@@ -6,15 +6,37 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+enum Status {
+    green
+    yellow
+    red
+}
+
+enum SensorType {
+    Temperatur
+}
+
+model Sensor {
+    id                  Int           @id @default(autoincrement())
+    name                String
+    status              Status
+    sensorID            String
+    sensorType          SensorType
+    measurementDuration Int
+    Measurement         Measurement[]
 
     @@index([name])
+}
+
+model Measurement {
+    id        Int      @id @default(autoincrement())
+    sensor    Sensor   @relation(fields: [sensorId], references: [id])
+    value     Float
+    type      String
+    timestamp DateTime @default(now())
+    sensorId  Int
 }

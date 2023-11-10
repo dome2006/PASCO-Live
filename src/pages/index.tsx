@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from '~/utils/api'
 import styles from './index.module.css'
 import Card from '~/components/Card'
@@ -47,16 +50,16 @@ export default function Home() {
 							<Card
 								key={index}
 								title={card.name}
-								indicatorState={'green' || card.status}
+								indicatorState={card.status}
 								rows={[
 									{ label: 'ID', value: card.sensorID },
-									{ label: 'Typ', value: card.type },
+									{ label: 'Typ', value: card.sensorType },
 									{ idSeperator: true },
 									{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },
 									{ label: 'Letzte Messung', value: `vor ${card.lastMeasurement} Minuten` },
 									{ idSeperator: true },
 									...card.measurements.map((measurement) => {
-										return { label: measurement.name, value: measurement.value }
+										return { label: measurement.name, value: measurement.value.toString() }
 									}),
 								]}
 								onEdit={async () => {

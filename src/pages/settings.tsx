@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from '~/utils/api'
 import styles from './settings.module.css'
 import { motion } from 'framer-motion'
@@ -8,6 +11,7 @@ import Button from '~/components/Button'
 import Input from '~/components/Input'
 import classNames from 'classnames'
 import { useKey } from 'react-use'
+import { SensorType } from '@prisma/client'
 
 export default function Home() {
 	const { data, refetch } = api.sensor.getAll.useQuery()
@@ -24,7 +28,7 @@ export default function Home() {
 	const [isAdd, setIsAdd] = useState(!!router.query.isAdd)
 	const [originSensorID, setOriginSensorID] = useState(router.query.id as string)
 
-	const originSensor = data?.cards.find((e) => e.id == originSensorID)
+	const originSensor = data?.cards.find((e) => e.id.toString() == originSensorID)
 
 	useEffect(() => {
 		if (router.query.isAdd) {
@@ -47,8 +51,8 @@ export default function Home() {
 	const initialMeasurementDuration = originSensor ? originSensor.measurementDuration.toString() : ''
 	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
 
-	const initialType = originSensor ? originSensor.type : ''
-	const [type, setType] = useState<string | undefined>(undefined)
+	const initialType = originSensor ? originSensor.sensorType : ''
+	const [type, setType] = useState<SensorType>("Temperatur")
 
 	const [overrideChangesMade, setOverrideChangesMade] = useState(false)
 	const [saving, setSaving] = useState(false)
@@ -65,7 +69,7 @@ export default function Home() {
 		setName(undefined)
 		setSensorID(undefined)
 		setMeasurementDuration(undefined)
-		setType(undefined)
+		setType("Temperatur")
 	}
 
 	const changesMade = !!(
@@ -167,7 +171,8 @@ export default function Home() {
 							width={'200px'}
 							value={type ?? initialType}
 							onChange={(e) => {
-								setType(e.target.value)
+								//TODO: Dropdown
+								setType("Temperatur")
 							}}
 						>
 							Sensortyp
@@ -192,7 +197,7 @@ export default function Home() {
 										if (isAdd) {
 											setSaving(true)
 											try {
-												await createSensor.mutateAsync({ name: name ?? '', sensorID: sensorID ?? '', measurementDuration: parseInt(measurementDuration ?? '0'), type: type ?? '' })
+												await createSensor.mutateAsync({ name: name ?? '', sensorID: sensorID ?? '', measurementDuration: parseInt(measurementDuration ?? '0'), sensorType: type ?? 'Temperatur' })
 												await refetch()
 												setOverrideChangesMade(true)
 												router.back()

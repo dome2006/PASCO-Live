@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { SensorType } from '@prisma/client'
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
@@ -44,30 +50,61 @@ const cards = [
 ]
 
 export const sensorRouter = createTRPCRouter({
-	getAll: publicProcedure.query(async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1000))
+	getAll: publicProcedure.query(async ({ ctx }) => {
+		const sensors = await ctx.db.sensor.findMany({ include: { Measurement: true } })
 
-		return {
-			cards,
-		}
+		const sensorWithLatestMeasurement = sensors.map((sensor) => {
+			const { Measurement, ...strippedSensorData } = sensor
+
+			let latestMeasurementTime = -1
+			let latestMeasurementDataGroupedByType: Record<string, { timestamp: Date; value: number | string }> = {}
+
+			if (Measurement.length != 0) {
+				latestMeasurementTime = Measurement.reduce((prev, current) => (prev.timestamp > current.timestamp ? prev : current)).timestamp.getTime()
+				latestMeasurementDataGroupedByType = Measurement.reduce<Record<string, { timestamp: Date; value: number | string }>>((prev, current) => {
+					const prevValue = prev[current.type]
+
+					if (prevValue && prevValue.timestamp > current.timestamp) {
+						return prev
+					}
+
+					return {
+						...prev,
+						[current.type]: {
+							timestamp: current.timestamp,
+							value: current.value,
+						},
+					}
+				}, {})
+			}
+
+			const measurements = Object.entries(latestMeasurementDataGroupedByType).map(([name, { value }]) => ({
+				name,
+				value,
+			}))
+
+			return {
+				...strippedSensorData,
+				measurements,
+				lastMeasurement: latestMeasurementTime,
+			}
+		})
+
+		return { cards: sensorWithLatestMeasurement }
 	}),
 
 	//TODO: update type
 	create: publicProcedure
-		.input(z.object({ name: z.string().min(1), sensorID: z.string().length(7), measurementDuration: z.number().min(1).max(9999), type: z.string() }))
+		.input(z.object({ name: z.string().min(1), sensorID: z.string().length(7), measurementDuration: z.number().min(1).max(9999), sensorType: z.nativeEnum(SensorType) }))
 		.mutation(async ({ ctx, input }) => {
-			// simulate a slow db call
-			await new Promise((resolve) => setTimeout(resolve, 1000))
-
-			cards.push({
-				id: Math.random().toString(36).substr(2, 9),
-				name: input.name,
-				sensorID: input.sensorID,
-				status: 'yellow',
-				type: input.type,
-				measurementDuration: input.measurementDuration,
-				lastMeasurement: 0,
-				measurements: [],
+			await ctx.db.sensor.create({
+				data: {
+					name: input.name,
+					sensorID: input.sensorID,
+					measurementDuration: input.measurementDuration,
+					sensorType: input.sensorType,
+					status: 'yellow',
+				},
 			})
 
 			return true
