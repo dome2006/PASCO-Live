@@ -20,8 +20,13 @@ enum SensorType {
     Temperatur
 }
 
+enum MeasurementType {
+    Temperatur
+    Batterie
+}
+
 model Sensor {
-    id                  Int           @id @default(autoincrement())
+    id                  String        @id @default(uuid())
     name                String
     status              Status
     sensorID            String
@@ -33,10 +38,10 @@ model Sensor {
 }
 
 model Measurement {
-    id        Int      @id @default(autoincrement())
-    sensor    Sensor   @relation(fields: [sensorId], references: [id])
+    id        String          @id @default(uuid())
+    sensor    Sensor          @relation(fields: [sensorId], references: [id])
     value     Float
-    type      String
-    timestamp DateTime @default(now())
-    sensorId  Int
+    type      MeasurementType
+    timestamp DateTime        @default(now())
+    sensorId  String
 }

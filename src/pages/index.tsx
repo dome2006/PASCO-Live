@@ -54,13 +54,17 @@ export default function Home() {
 								rows={[
 									{ label: 'ID', value: card.sensorID },
 									{ label: 'Typ', value: card.sensorType },
-									{ idSeperator: true },
-									{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },
-									{ label: 'Letzte Messung', value: `vor ${card.lastMeasurement} Minuten` },
-									{ idSeperator: true },
-									...card.measurements.map((measurement) => {
-										return { label: measurement.name, value: measurement.value.toString() }
-									}),
+									...(card.lastMeasurement > 0
+										? [
+												{ idSeperator: true },
+												{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },
+												{ label: 'Letzte Messung', value: `vor ${card.lastMeasurement} Minuten` },
+												{ idSeperator: true },
+												...card.measurements.map((measurement) => {
+													return { label: measurement.name, value: measurement.value.toString() }
+												}),
+										  ]
+										: []),
 								]}
 								onEdit={async () => {
 									await router.push({ pathname: '/settings', query: { id: card.id } })

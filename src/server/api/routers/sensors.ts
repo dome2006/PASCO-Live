@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { SensorType } from '@prisma/client'
+import { MeasurementType, SensorType } from '@prisma/client'
+import moment from 'moment'
 import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
@@ -56,26 +57,39 @@ export const sensorRouter = createTRPCRouter({
 		const sensorWithLatestMeasurement = sensors.map((sensor) => {
 			const { Measurement, ...strippedSensorData } = sensor
 
-			let latestMeasurementTime = -1
-			let latestMeasurementDataGroupedByType: Record<string, { timestamp: Date; value: number | string }> = {}
+			let latestMeasurement = -1
+			let latestMeasurementDataGroupedByType: Record<string, { timestamp: number; value: number | string }> = {}
 
 			if (Measurement.length != 0) {
-				latestMeasurementTime = Measurement.reduce((prev, current) => (prev.timestamp > current.timestamp ? prev : current)).timestamp.getTime()
-				latestMeasurementDataGroupedByType = Measurement.reduce<Record<string, { timestamp: Date; value: number | string }>>((prev, current) => {
+				latestMeasurementDataGroupedByType = Measurement.reduce<Record<string, { timestamp: number; value: number | string }>>((prev, current) => {
 					const prevValue = prev[current.type]
 
-					if (prevValue && prevValue.timestamp > current.timestamp) {
+					if (prevValue && prevValue.timestamp > moment().diff(moment(current.timestamp), 'minutes')) {
 						return prev
+					}
+
+					let einheit = ''
+
+					if (current.type == 'Temperatur') {
+						einheit = '°C'
+					}
+					if (current.type == 'Batterie') {
+						einheit = '%'
 					}
 
 					return {
 						...prev,
 						[current.type]: {
-							timestamp: current.timestamp,
-							value: current.value,
+							timestamp: moment().diff(moment(current.timestamp), 'minutes'),
+							value: current.value + ' ' + einheit,
 						},
 					}
 				}, {})
+				Object.entries(latestMeasurementDataGroupedByType).forEach(([_, { timestamp }]) => {
+					if (latestMeasurement == -1 || timestamp < latestMeasurement) {
+						latestMeasurement = timestamp
+					}
+				})
 			}
 
 			const measurements = Object.entries(latestMeasurementDataGroupedByType).map(([name, { value }]) => ({
@@ -86,7 +100,7 @@ export const sensorRouter = createTRPCRouter({
 			return {
 				...strippedSensorData,
 				measurements,
-				lastMeasurement: latestMeasurementTime,
+				lastMeasurement: latestMeasurement,
 			}
 		})
 
@@ -95,7 +109,14 @@ export const sensorRouter = createTRPCRouter({
 
 	//TODO: update type
 	create: publicProcedure
-		.input(z.object({ name: z.string().min(1), sensorID: z.string().length(7), measurementDuration: z.number().min(1).max(9999), sensorType: z.nativeEnum(SensorType) }))
+		.input(
+			z.object({
+				name: z.string().min(1),
+				sensorID: z.string().regex(/[0-9]{3}\-[0-9]{3}/g),
+				measurementDuration: z.number().min(1).max(9999),
+				sensorType: z.nativeEnum(SensorType),
+			})
+		)
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db.sensor.create({
 				data: {
@@ -115,25 +136,21 @@ export const sensorRouter = createTRPCRouter({
 			z.object({
 				id: z.string(),
 				name: z.string().min(1).optional(),
-				sensorID: z.string().length(7).optional(),
+				sensorID: z.string().regex(/[0-9]{3}\-[0-9]{3}/g).optional(),
 				measurementDuration: z.number().min(1).max(9999).optional(),
-				type: z.string().optional(),
+				sensorType: z.nativeEnum(SensorType).optional(),
 			})
 		)
 		.mutation(async ({ ctx, input }) => {
-			// simulate a slow db call
-			await new Promise((resolve) => setTimeout(resolve, 1000))
-
-			const card = cards.find((card) => card.id === input.id)
-
-			if (!card) {
-				return false
-			}
-
-			card.name = input.name ?? card.name
-			card.sensorID = input.sensorID ?? card.sensorID
-			card.type = input.type ?? card.type
-			card.measurementDuration = input.measurementDuration ?? card.measurementDuration
+			await ctx.db.sensor.update({
+				where: { id: input.id },
+				data: {
+					name: input.name,
+					sensorID: input.sensorID,
+					measurementDuration: input.measurementDuration,
+					sensorType: input.sensorType,
+				},
+			})
 
 			return true
 		}),

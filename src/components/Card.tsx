@@ -9,7 +9,7 @@ export default function Card({
 }: {
 	title: string
 	indicatorState: 'green' | 'yellow' | 'red'
-	rows: ({ idSeperator: true } | { label: string; value: string })[]
+	rows: ({ idSeperator: boolean } | { label: string; value: string })[]
 	onEdit?: () => void
 }) {
 	return (

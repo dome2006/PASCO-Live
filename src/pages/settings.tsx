@@ -51,8 +51,8 @@ export default function Home() {
 	const initialMeasurementDuration = originSensor ? originSensor.measurementDuration.toString() : ''
 	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
 
-	const initialType = originSensor ? originSensor.sensorType : ''
-	const [type, setType] = useState<SensorType>("Temperatur")
+	const initialType = originSensor ? originSensor.sensorType : 'Temperatur'
+	const [type, setType] = useState<SensorType>('Temperatur')
 
 	const [overrideChangesMade, setOverrideChangesMade] = useState(false)
 	const [saving, setSaving] = useState(false)
@@ -69,7 +69,7 @@ export default function Home() {
 		setName(undefined)
 		setSensorID(undefined)
 		setMeasurementDuration(undefined)
-		setType("Temperatur")
+		setType('Temperatur')
 	}
 
 	const changesMade = !!(
@@ -172,7 +172,7 @@ export default function Home() {
 							value={type ?? initialType}
 							onChange={(e) => {
 								//TODO: Dropdown
-								setType("Temperatur")
+								setType('Temperatur')
 							}}
 						>
 							Sensortyp
@@ -197,11 +197,17 @@ export default function Home() {
 										if (isAdd) {
 											setSaving(true)
 											try {
-												await createSensor.mutateAsync({ name: name ?? '', sensorID: sensorID ?? '', measurementDuration: parseInt(measurementDuration ?? '0'), sensorType: type ?? 'Temperatur' })
+												await createSensor.mutateAsync({
+													name: name ?? '',
+													sensorID: sensorID ?? '',
+													measurementDuration: parseInt(measurementDuration ?? '0'),
+													sensorType: type ?? 'Temperatur',
+												})
 												await refetch()
 												setOverrideChangesMade(true)
 												router.back()
 											} catch (error) {
+												alert('Ein Fehler ist aufgetreten, bitte überprüfe deine Eingaben und versuche es erneut.')
 												setSaving(false)
 											}
 										} else {
@@ -213,12 +219,13 @@ export default function Home() {
 													name: name,
 													sensorID: sensorID,
 													measurementDuration: measurementDuration ? parseInt(measurementDuration) : undefined,
-													type: type,
+													sensorType: type,
 												})
 												await refetch()
 												setSaving(false)
 												reset()
 											} catch (error) {
+												alert('Ein Fehler ist aufgetreten, bitte überprüfe deine Eingaben und versuche es erneut.')
 												setSaving(false)
 											}
 										}
