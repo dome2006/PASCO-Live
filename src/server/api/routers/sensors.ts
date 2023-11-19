@@ -136,7 +136,10 @@ export const sensorRouter = createTRPCRouter({
 			z.object({
 				id: z.string(),
 				name: z.string().min(1).optional(),
-				sensorID: z.string().regex(/[0-9]{3}\-[0-9]{3}/g).optional(),
+				sensorID: z
+					.string()
+					.regex(/[0-9]{3}\-[0-9]{3}/g)
+					.optional(),
 				measurementDuration: z.number().min(1).max(9999).optional(),
 				sensorType: z.nativeEnum(SensorType).optional(),
 			})
@@ -154,5 +157,11 @@ export const sensorRouter = createTRPCRouter({
 
 			return true
 		}),
+
+	delete: publicProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+		await ctx.db.sensor.delete({ where: { id: input.id } })
+
+		return true
+	}),
 })
 

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from '~/utils/api'
 import styles from './settings.module.css'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import { useOnLeavePageConfirmation } from '~/utils/useOnLeavePageConfirmation'
 import { useEffect, useState } from 'react'
@@ -18,12 +18,9 @@ export default function Home() {
 
 	const createSensor = api.sensor.create.useMutation()
 	const updateSensor = api.sensor.update.useMutation()
+	const deleteSensor = api.sensor.delete.useMutation()
 
 	const router = useRouter()
-
-	useKey('Escape', () => {
-		router.back()
-	})
 
 	const [isAdd, setIsAdd] = useState(!!router.query.isAdd)
 	const [originSensorID, setOriginSensorID] = useState(router.query.id as string)
@@ -101,6 +98,16 @@ export default function Home() {
 		}, 500)
 	})
 
+	const [displayDeleteConfirm, setDisplayDeleteConfirm] = useState(false)
+
+	useKey('Escape', () => {
+		if (displayDeleteConfirm) {
+			setDisplayDeleteConfirm(false)
+		} else {
+			router.back()
+		}
+	}, {}, [displayDeleteConfirm, router.back])
+
 	return (
 		<>
 			<motion.div
@@ -113,7 +120,12 @@ export default function Home() {
 				<div className={styles.card}>
 					<div className={styles.header}>
 						{!isAdd && (
-							<Button type={'none'}>
+							<Button
+								type={'none'}
+								onClick={() => {
+									setDisplayDeleteConfirm(true)
+								}}
+							>
 								<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 14 17" fill="none">
 									<path
 										d="M6.39056 0.890549C5.34426 0.890549 4.48819 1.74661 4.48819 2.79291H2.58583C1.53953 2.79291 0.683472 3.64897 0.683472 4.69527H14C14 3.64897 13.1439 2.79291 12.0976 2.79291H10.1953C10.1953 1.74661 9.33922 0.890549 8.29292 0.890549H6.39056ZM2.58583 6.59763V15.748C2.58583 15.9572 2.73802 16.1094 2.94728 16.1094H11.7552C11.9645 16.1094 12.1167 15.9572 12.1167 15.748V6.59763H10.2143V13.2559C10.2143 13.7886 9.79578 14.2071 9.26312 14.2071C8.73046 14.2071 8.31194 13.7886 8.31194 13.2559V6.59763H6.40958V13.2559C6.40958 13.7886 5.99106 14.2071 5.4584 14.2071C4.92574 14.2071 4.50722 13.7886 4.50722 13.2559V6.59763H2.60486H2.58583Z"
@@ -238,6 +250,42 @@ export default function Home() {
 					</div>
 				</div>
 			</motion.div>
+			<AnimatePresence>
+				{displayDeleteConfirm && (
+					<motion.div
+						initial={{ opacity: 0, scale: 1.5 }}
+						animate={{ opacity: 1, scale: 1, transition: { ease: [0, 0.58, 0.58, 1.25], duration: 0.2, delay: 0.1 } }}
+						exit={{ opacity: 0, scale: 1.5, transition: { ease: [0.49, -0.28, 0.96, 0.66], duration: 0.2 } }}
+						className={styles.deletePopup}
+					>
+						<div className={styles.card}>
+							<p>Möchtest du den Sensor &quot;{initialName}&quot; wirklich löschen?</p>
+							<div className={styles.buttonRow}>
+								<Button
+									type={'secondary'}
+									onClick={() => {
+										setDisplayDeleteConfirm(false)
+									}}
+								>
+									Abbrechen
+								</Button>
+								<Button
+									type={'danger'}
+									onClick={() => {
+										setOverrideChangesMade(true)
+										// eslint-disable-next-line @typescript-eslint/no-floating-promises
+										deleteSensor.mutateAsync({ id: originSensorID })
+										// eslint-disable-next-line @typescript-eslint/no-floating-promises
+										router.back()
+									}}
+								>
+									Löschen
+								</Button>
+							</div>
+						</div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</>
 	)
 }

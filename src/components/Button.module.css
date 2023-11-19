@@ -27,7 +27,7 @@
     transition: outline-offset 0.05s;
 }
 
-.children{
+.children {
     z-index: 1;
 }
 
@@ -40,12 +40,16 @@
     border: 1px solid #FFF;
 }
 
-.none{
+.danger {
+    background: #F32323;
+}
+
+.none {
     padding: 5px;
     border-radius: 15px;
 }
 
-.contentLoader{
+.contentLoader {
     position: absolute;
     top: 0;
     left: 0;

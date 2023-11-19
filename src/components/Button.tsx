@@ -12,7 +12,7 @@ export default function Card({
 	children?: React.ReactNode
 	onClick?: () => void
 	loading?: boolean
-	type?: 'primary' | 'secondary' | 'none'
+	type?: 'primary' | 'secondary' | 'danger' | 'none'
 }) {
 	return (
 		<button disabled={loading} className={classnames(styles.container, styles[type], loading && styles.loading)} onClick={onClick}>

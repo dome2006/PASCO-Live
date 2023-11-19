@@ -13,7 +13,7 @@ import { useContext, useEffect, useRef } from 'react'
 import { mainPageScrollContext } from './_app'
 
 export default function Home() {
-	const { data } = api.sensor.getAll.useQuery()
+	const { data } = api.sensor.getAll.useQuery(undefined, { refetchInterval: 5000 })
 
 	const cards = data?.cards ?? []
 
