@@ -1,21 +1,29 @@
+import { api } from '~/utils/api'
 import Button from './Button'
 import styles from './Card.module.css'
 
 export default function Card({
 	title,
+	id,
 	indicatorState,
 	rows,
 	onEdit,
 }: {
 	title: string
+	id: string
 	indicatorState: 'green' | 'yellow' | 'red'
 	rows: ({ idSeperator: boolean } | { label: string; value: string })[]
 	onEdit?: () => void
 }) {
+
+	const reconnect = api.sensor.reconnect.useMutation()
+
 	return (
 		<div className={styles.card}>
 			<div className={styles.header}>
-				<div className={styles.indicator} title={indicatorState == "green" ? "Verbunden" : indicatorState == "yellow" ? "Verbindung wird hergestellt" : "Nicht verbunden"} style={{ backgroundColor: `var(--${indicatorState})` }}></div>
+				<div className={styles.indicator} title={indicatorState == "green" ? "Verbunden" : indicatorState == "yellow" ? "Verbindung wird hergestellt" : "Nicht verbunden"} style={{ backgroundColor: `var(--${indicatorState})` }} onClick={()=>{
+						reconnect.mutate({id: id})
+				}}></div>
 				<h2 className={styles.title}>{title}</h2>
 				<Button type={'none'} onClick={onEdit}>
 					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">

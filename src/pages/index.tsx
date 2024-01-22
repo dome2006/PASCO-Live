@@ -49,12 +49,13 @@ export default function Home() {
 						return (
 							<Card
 								key={index}
+								id={card.id}
 								title={card.name}
 								indicatorState={card.status}
 								rows={[
 									{ label: 'ID', value: card.sensorID },
 									{ label: 'Typ', value: card.sensorType },
-									...(card.lastMeasurement > 0
+									...(card.lastMeasurement >= 0
 										? [
 												{ idSeperator: true },
 												{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },

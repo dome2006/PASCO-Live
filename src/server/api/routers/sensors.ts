@@ -64,7 +64,7 @@ export const sensorRouter = createTRPCRouter({
 				latestMeasurementDataGroupedByType = Measurement.reduce<Record<string, { timestamp: number; value: number | string }>>((prev, current) => {
 					const prevValue = prev[current.type]
 
-					if (prevValue && prevValue.timestamp > moment().diff(moment(current.timestamp), 'minutes')) {
+					if (prevValue && prevValue.timestamp < moment().diff(moment(current.timestamp), 'minutes')) {
 						return prev
 					}
 
@@ -163,5 +163,15 @@ export const sensorRouter = createTRPCRouter({
 
 		return true
 	}),
+	reconnect: publicProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+		await ctx.db.sensor.update({
+			where: { id: input.id },
+			data: {
+				status: 'yellow',
+			},
+		})
+
+		return true
+	})
 })
 
