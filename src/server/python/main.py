@@ -18,6 +18,8 @@ pascoSensorsLastUpdateTime = {}
 async def main() -> None:
     await prisma.connect()
 
+    print("start")
+
     while True:
         await updateSensors()
         await asyncio.sleep(2)
