@@ -134,7 +134,7 @@ async def updateSensors():
                             }
                         )
                         print("Humidity: " + str(RelativeHumidity))
-                    elif sensor.sensorType == "Temperature":
+                    elif sensor.sensorType == "Temperatur":
                         Temperature = pascoSensors[sensor.sensorID].read_data("Temperature")
                         await prisma.measurement.create(
                             data={
