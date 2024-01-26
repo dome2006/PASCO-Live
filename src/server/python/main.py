@@ -101,7 +101,7 @@ async def updateSensors():
                 #if pascoSensorsLastMeasurementTime not exists, or more than 5 minutes ago write current system time in it
                 seconds = sensor.measurementDuration * 60
                 if sensor.sensorID not in pascoSensorsLastMeasurementTime or (sensor.sensorID in pascoSensorsLastMeasurementTime and pascoSensorsLastMeasurementTime[sensor.sensorID] + seconds < time.time()):
-                    print("Update Measurement of " + sensor.sensorID)
+                    print("Update Measurement of " + sensor.sensorID + sensor.sensorType)
                     pascoSensorsLastMeasurementTime[sensor.sensorID] = time.time()
                     pascoSensorsLastUpdateTime[sensor.sensorID] = time.time()
                     if sensor.sensorType == "O2":
@@ -143,7 +143,8 @@ async def updateSensors():
                         )
                         print("Temperature: " + str(Temperature))
                     elif sensor.sensorType == "CO2":
-                        CO2GasConcentration = pascoSensors[sensor.sensorID].read_data("CO2GasConcentration")
+                        print("CO2")
+                        CO2GasConcentration = pascoSensors[sensor.sensorID].read_data("CO2Concentration")
                         await prisma.measurement.create(
                             data={
                                 "sensorId": sensor.id,
