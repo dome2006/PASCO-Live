@@ -183,8 +183,7 @@ export default function Home() {
 							width={'200px'}
 							value={type ?? initialType}
 							onChange={(e) => {
-								//TODO: Dropdown
-								setType('Temperatur')
+								setType(e.target.value as SensorType)
 							}}
 						>
 							Sensortyp

@@ -9,47 +9,6 @@ import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '~/server/api/trpc'
 
-const cards = [
-	{
-		id: '4e36bwbe465b65e',
-		name: 'Zimmerteperatur',
-		sensorID: '202-838',
-		status: 'green',
-		type: 'Temperatur',
-		measurementDuration: 5,
-		lastMeasurement: 3,
-		measurements: [
-			{
-				name: 'Temperatur',
-				value: '20°C',
-			},
-			{
-				name: 'Batterie',
-				value: '52%',
-			},
-		],
-	},
-	{
-		id: '3w364wvv6wve',
-		name: 'Zimmerluft',
-		sensorID: '138-468',
-		status: 'green',
-		type: 'Luftqualität',
-		measurementDuration: 5,
-		lastMeasurement: 2,
-		measurements: [
-			{
-				name: 'CO2',
-				value: '512 ppm',
-			},
-			{
-				name: 'Batterie',
-				value: '52%',
-			},
-		],
-	},
-]
-
 export const sensorRouter = createTRPCRouter({
 	getAll: publicProcedure.query(async ({ ctx }) => {
 		const sensors = await ctx.db.sensor.findMany({ include: { Measurement: true } })
@@ -70,10 +29,28 @@ export const sensorRouter = createTRPCRouter({
 
 					let einheit = ''
 
-					if (current.type == 'Temperatur') {
+					if (current.type == 'temperatur') {
 						einheit = '°C'
 					}
-					if (current.type == 'Batterie') {
+					if (current.type == 'CO2') {
+						einheit = 'ppm'
+					}
+					if (current.type == 'humidity') {
+						einheit = '%'
+					}
+					if (current.type == 'pressure') {
+						einheit = 'hPa'
+					}
+					if (current.type == 'O2') {
+						einheit = '%'
+					}
+					if (current.type == 'VWCClay') {
+						einheit = '%'
+					}
+					if (current.type == 'VWCLoam') {
+						einheit = '%'
+					}
+					if (current.type == 'VWCSand') {
 						einheit = '%'
 					}
 

@@ -18,11 +18,21 @@ enum Status {
 
 enum SensorType {
     Temperatur
+    O2
+    CO2
+    SoileMoisture
+    Pressure
 }
 
 enum MeasurementType {
-    Temperatur
-    Batterie
+    temperatur
+    O2
+    CO2
+    humidity
+    VWCLoam
+    VWCSand
+    VWCClay
+    pressure
 }
 
 model Sensor {
