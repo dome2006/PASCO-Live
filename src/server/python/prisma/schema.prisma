@@ -25,7 +25,7 @@ enum SensorType {
 }
 
 enum MeasurementType {
-    Temperatur
+    temperatur
     O2
     CO2
     humidity
