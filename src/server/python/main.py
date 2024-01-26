@@ -13,6 +13,7 @@ prisma = Prisma()
 
 pascoSensors = {}
 pascoSensorsLastMeasurementTime = {}
+pascoSensorsLastUpdateTime = {}
 
 async def main() -> None:
     await prisma.connect()
@@ -92,11 +93,17 @@ async def updateSensors():
                 if not pascoSensors[sensor.sensorID].is_connected():
                     #throw error
                     raise Exception("Sensor is not connected")
+                
+                if sensor.sensorID not in pascoSensorsLastUpdateTime or pascoSensorsLastUpdateTime[sensor.sensorID] + 60 * 4 < time.time():
+                    pascoSensorsLastUpdateTime[sensor.sensorID] = time.time()
+                    pascoSensors[sensor.sensorID].keepalive()
+
                 #if pascoSensorsLastMeasurementTime not exists, or more than 5 minutes ago write current system time in it
                 seconds = sensor.measurementDuration * 60
                 if sensor.sensorID not in pascoSensorsLastMeasurementTime or (sensor.sensorID in pascoSensorsLastMeasurementTime and pascoSensorsLastMeasurementTime[sensor.sensorID] + seconds < time.time()):
                     print("Update Measurement of " + sensor.sensorID)
                     pascoSensorsLastMeasurementTime[sensor.sensorID] = time.time()
+                    pascoSensorsLastUpdateTime[sensor.sensorID] = time.time()
                     if sensor.sensorType == "O2":
                         OxygenGasConcentration = pascoSensors[sensor.sensorID].read_data("OxygenGasConcentration")
                         await prisma.measurement.create(
