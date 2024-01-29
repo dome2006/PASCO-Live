@@ -121,7 +121,7 @@ async def updateSensors():
                             data={
                                 "sensorId": sensor.id,
                                 "value": Temperature,
-                                "type": "temperature"
+                                "type": "temperatur"
                             }
                         )
                         print("Temperature: " + str(Temperature))
@@ -140,7 +140,7 @@ async def updateSensors():
                             data={
                                 "sensorId": sensor.id,
                                 "value": Temperature,
-                                "type": "temperature"
+                                "type": "temperatur"
                             }
                         )
                         print("Temperature: " + str(Temperature))
