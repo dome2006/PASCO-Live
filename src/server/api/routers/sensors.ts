@@ -44,15 +44,16 @@ export const sensorRouter = createTRPCRouter({
 					if (current.type == 'O2') {
 						einheit = '%'
 					}
-					if (current.type == 'VWCClay') {
+					if (current.type == 'DO2Saturation') {
 						einheit = '%'
 					}
-					if (current.type == 'VWCLoam') {
+					if (current.type == 'DO2Concentraition') {
 						einheit = '%'
 					}
-					if (current.type == 'VWCSand') {
+					if (current.type == 'O2GasConcentraiton') {
 						einheit = '%'
 					}
+
 
 					return {
 						...prev,
