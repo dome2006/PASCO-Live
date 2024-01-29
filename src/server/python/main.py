@@ -170,7 +170,7 @@ async def updateSensors():
                     #         data={
                     #             "sensorId": sensor.id,
                     #             "value": VWCSand,
-                    #             "type": "VWCSand"
+                    #             "type": "VWCSand" 
                     #         }
                     #     )
                     #     print("VWCSand: " + str(VWCSand))
