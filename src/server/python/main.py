@@ -196,6 +196,7 @@ async def updateSensors():
 
                     
             except Exception as e:
+                print(e)
                 await checkSensorStatus(sensor.id, sensor.sensorID)
 
 
