@@ -49,7 +49,7 @@ export default function Home() {
 	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
 
 	const initialType = originSensor ? originSensor.sensorType : 'Temperatur'
-	const [type, setType] = useState<SensorType>('Temperatur')
+	const [type, setType] = useState<SensorType | undefined>(undefined)
 
 	const [overrideChangesMade, setOverrideChangesMade] = useState(false)
 	const [saving, setSaving] = useState(false)
