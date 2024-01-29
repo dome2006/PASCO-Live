@@ -58,7 +58,7 @@ export default function Home() {
 									...(card.lastMeasurement >= 0
 										? [
 												{ idSeperator: true },
-												{ label: 'Messung alle', value: `${card.measurementDuration} Minuten` },
+												{ label: 'Messung alle', value: `${card.measurementDuration / 60} Minuten` },
 												{ label: 'Letzte Messung', value: `vor ${card.lastMeasurement} Minuten` },
 												{ idSeperator: true },
 												...card.measurements.map((measurement) => {

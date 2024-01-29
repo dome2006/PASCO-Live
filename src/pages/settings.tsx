@@ -45,7 +45,7 @@ export default function Home() {
 	const initialSensorID = originSensor ? originSensor.sensorID : ''
 	const [sensorID, setSensorID] = useState<string | undefined>(undefined)
 
-	const initialMeasurementDuration = originSensor ? originSensor.measurementDuration.toString() : ''
+	const initialMeasurementDuration = originSensor ? (originSensor.measurementDuration / 60).toString() : ''
 	const [measurementDuration, setMeasurementDuration] = useState<string | undefined>(undefined)
 
 	const initialType = originSensor ? originSensor.sensorType : 'Temperatur'

@@ -155,34 +155,6 @@ async def updateSensors():
                             }
                         )
                         print("CO2: " + str(CO2GasConcentration))
-                    elif sensor.sensorType == "SoileMoisture":
-                        VWCLoam = pascoSensors[sensor.sensorID].read_data("VWCLoam")
-                        await prisma.measurement.create(
-                            data={
-                                "sensorId": sensor.id,
-                                "value": VWCLoam,
-                                "type": "VWCLoam"
-                            }
-                        )
-                        print("VWCLoam: " + str(VWCLoam))
-                        VWCSand = pascoSensors[sensor.sensorID].read_data("VWCSand")
-                        await prisma.measurement.create(
-                            data={
-                                "sensorId": sensor.id,
-                                "value": VWCSand,
-                                "type": "VWCSand"
-                            }
-                        )
-                        print("VWCSand: " + str(VWCSand))
-                        VWCClay = pascoSensors[sensor.sensorID].read_data("VWCClay")
-                        await prisma.measurement.create(
-                            data={
-                                "sensorId": sensor.id,
-                                "value": VWCClay,
-                                "type": "VWCClay"
-                            }
-                        )
-                        print("VWCClay: " + str(VWCClay))
                     # elif sensor.sensorType == "SoileMoisture":
                     #     VWCLoam = pascoSensors[sensor.sensorID].read_data("VWCLoam")
                     #     await prisma.measurement.create(
