@@ -100,13 +100,18 @@ export default function Home() {
 
 	const [displayDeleteConfirm, setDisplayDeleteConfirm] = useState(false)
 
-	useKey('Escape', () => {
-		if (displayDeleteConfirm) {
-			setDisplayDeleteConfirm(false)
-		} else {
-			router.back()
-		}
-	}, {}, [displayDeleteConfirm, router.back])
+	useKey(
+		'Escape',
+		() => {
+			if (displayDeleteConfirm) {
+				setDisplayDeleteConfirm(false)
+			} else {
+				router.back()
+			}
+		},
+		{},
+		[displayDeleteConfirm, router.back]
+	)
 
 	return (
 		<>
@@ -211,7 +216,7 @@ export default function Home() {
 												await createSensor.mutateAsync({
 													name: name ?? '',
 													sensorID: sensorID ?? '',
-													measurementDuration: parseInt(measurementDuration ?? '0') * 60,
+													measurementDuration: Math.round(parseFloat(measurementDuration ?? '0') * 60),
 													sensorType: type ?? 'Temperatur',
 												})
 												await refetch()
@@ -229,7 +234,7 @@ export default function Home() {
 													id: originSensorID,
 													name: name,
 													sensorID: sensorID,
-													measurementDuration: measurementDuration ? parseInt(measurementDuration) * 60 : undefined,
+													measurementDuration: measurementDuration ? Math.round(parseFloat(measurementDuration) * 60) : undefined,
 													sensorType: type,
 												})
 												await refetch()
