@@ -66,7 +66,7 @@ export default function Home() {
 		setName(undefined)
 		setSensorID(undefined)
 		setMeasurementDuration(undefined)
-		setType('Temperatur')
+		setType(undefined)
 	}
 
 	const changesMade = !!(
