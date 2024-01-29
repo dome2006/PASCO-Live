@@ -183,6 +183,71 @@ async def updateSensors():
                             }
                         )
                         print("VWCClay: " + str(VWCClay))
+                    # elif sensor.sensorType == "SoileMoisture":
+                    #     VWCLoam = pascoSensors[sensor.sensorID].read_data("VWCLoam")
+                    #     await prisma.measurement.create(
+                    #         data={
+                    #             "sensorId": sensor.id,
+                    #             "value": VWCLoam,
+                    #             "type": "VWCLoam"
+                    #         }
+                    #     )
+                    #     print("VWCLoam: " + str(VWCLoam))
+                    #     VWCSand = pascoSensors[sensor.sensorID].read_data("VWCSand")
+                    #     await prisma.measurement.create(
+                    #         data={
+                    #             "sensorId": sensor.id,
+                    #             "value": VWCSand,
+                    #             "type": "VWCSand"
+                    #         }
+                    #     )
+                    #     print("VWCSand: " + str(VWCSand))
+                    #     VWCClay = pascoSensors[sensor.sensorID].read_data("VWCClay")
+                    #     await prisma.measurement.create(
+                    #         data={
+                    #             "sensorId": sensor.id,
+                    #             "value": VWCClay,
+                    #             "type": "VWCClay"
+                    #         }
+                    #     )
+                    #     print("VWCClay: " + str(VWCClay))
+                    elif sensor.sensorType == "DesolvedOxygen":
+                        DO2Saturation = pascoSensors[sensor.sensorID].read_data("DO2Saturation")
+                        await prisma.measurement.create(
+                            data={
+                                "sensorId": sensor.id,
+                                "value": DO2Saturation,
+                                "type": "DO2Saturation"
+                            }
+                        )
+                        print("DO2Saturation: " + str(DO2Saturation))
+                        DO2Concentraition = pascoSensors[sensor.sensorID].read_data("DO2Concentraition")
+                        await prisma.measurement.create(
+                            data={
+                                "sensorId": sensor.id,
+                                "value": DO2Concentraition,
+                                "type": "DO2Concentraition"
+                            }
+                        )
+                        print("DO2Concentraition: " + str(DO2Concentraition))
+                        O2GasConcentraiton = pascoSensors[sensor.sensorID].read_data("O2GasConcentraiton")
+                        await prisma.measurement.create(
+                            data={
+                                "sensorId": sensor.id,
+                                "value": O2GasConcentraiton,
+                                "type": "O2GasConcentraiton"
+                            }
+                        )
+                        print("O2GasConcentraiton: " + str(O2GasConcentraiton))
+                        temperatur = pascoSensors[sensor.sensorID].read_data("Temperature")
+                        await prisma.measurement.create(
+                            data={
+                                "sensorId": sensor.id,
+                                "value": temperatur,
+                                "type": "temperatur"
+                            }
+                        )
+                        print("temperatur: " + str(temperatur))
                     elif sensor.sensorType == "Pressure":
                         Pressure = pascoSensors[sensor.sensorID].read_data("Pressure")
                         await prisma.measurement.create(

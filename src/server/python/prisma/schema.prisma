@@ -20,7 +20,7 @@ enum SensorType {
     Temperatur
     O2
     CO2
-    SoileMoisture
+    DesolvedOxygen
     Pressure
 }
 
@@ -29,9 +29,9 @@ enum MeasurementType {
     O2
     CO2
     humidity
-    VWCLoam
-    VWCSand
-    VWCClay
+    DO2Saturation
+    DO2Concentraition
+    O2GasConcentraiton
     pressure
 }
 
