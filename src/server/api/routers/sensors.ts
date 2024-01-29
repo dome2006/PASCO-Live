@@ -81,6 +81,17 @@ export const sensorRouter = createTRPCRouter({
 			}
 		})
 
+		sensorWithLatestMeasurement.sort((a, b) => {
+			//sort by name
+			if (a.name < b.name) {
+				return -1
+			}
+			if (a.name > b.name) {
+				return 1
+			}
+			return 0
+		})
+
 		return { cards: sensorWithLatestMeasurement }
 	}),
 
@@ -90,7 +101,7 @@ export const sensorRouter = createTRPCRouter({
 			z.object({
 				name: z.string().min(1),
 				sensorID: z.string().regex(/[0-9]{3}\-[0-9]{3}/g),
-				measurementDuration: z.number().min(1).max(9999),
+				measurementDuration: z.number().min(1).max(99999),
 				sensorType: z.nativeEnum(SensorType),
 			})
 		)
@@ -117,7 +128,7 @@ export const sensorRouter = createTRPCRouter({
 					.string()
 					.regex(/[0-9]{3}\-[0-9]{3}/g)
 					.optional(),
-				measurementDuration: z.number().min(1).max(9999).optional(),
+				measurementDuration: z.number().min(1).max(99999).optional(),
 				sensorType: z.nativeEnum(SensorType).optional(),
 			})
 		)

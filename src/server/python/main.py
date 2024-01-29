@@ -101,7 +101,7 @@ async def updateSensors():
                     pascoSensors[sensor.sensorID].keepalive()
 
                 #if pascoSensorsLastMeasurementTime not exists, or more than 5 minutes ago write current system time in it
-                seconds = sensor.measurementDuration * 60
+                seconds = sensor.measurementDuration
                 if sensor.sensorID not in pascoSensorsLastMeasurementTime or (sensor.sensorID in pascoSensorsLastMeasurementTime and pascoSensorsLastMeasurementTime[sensor.sensorID] + seconds < time.time()):
                     print("Update Measurement of " + sensor.sensorID + sensor.sensorType)
                     pascoSensorsLastMeasurementTime[sensor.sensorID] = time.time()

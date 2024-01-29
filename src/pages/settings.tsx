@@ -211,7 +211,7 @@ export default function Home() {
 												await createSensor.mutateAsync({
 													name: name ?? '',
 													sensorID: sensorID ?? '',
-													measurementDuration: parseInt(measurementDuration ?? '0'),
+													measurementDuration: parseInt(measurementDuration ?? '0') * 60,
 													sensorType: type ?? 'Temperatur',
 												})
 												await refetch()
@@ -229,7 +229,7 @@ export default function Home() {
 													id: originSensorID,
 													name: name,
 													sensorID: sensorID,
-													measurementDuration: measurementDuration ? parseInt(measurementDuration) : undefined,
+													measurementDuration: measurementDuration ? parseInt(measurementDuration) * 60 : undefined,
 													sensorType: type,
 												})
 												await refetch()
