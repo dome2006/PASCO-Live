@@ -22,6 +22,7 @@ enum SensorType {
     CO2
     DesolvedOxygen
     Pressure
+    Light
 }
 
 enum MeasurementType {
@@ -33,6 +34,9 @@ enum MeasurementType {
     DO2Concentraition
     O2GasConcentraiton
     pressure
+    UVIndex
+    Illuminance
+    SolarPAR
 }
 
 model Sensor {
